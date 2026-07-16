@@ -12,7 +12,7 @@
   <meta property="og:description" content="Attorney-owned title company for purchases, sales, refinances, and title insurance. Fully insured. Call (985) 649-0433.">
   <meta property="og:url" content="https://patriottitlela.com/">
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  <link rel="stylesheet" href="styles.css?v=27">
+  <link rel="stylesheet" href="styles.css?v=28">
   <link rel="icon" type="image/png" href="./logo.png">
   <script type="application/ld+json">
   {
@@ -119,26 +119,26 @@
   </header>
 
   <main id="main">
-    <section class="hero framed section-enter is-in" id="home">
+    <section class="hero framed hero-animate" id="home">
       <span class="framed-wash" aria-hidden="true"></span>
       <span class="framed-mark framed-mark--top" aria-hidden="true"></span>
       <div class="hero-inner">
         <div class="hero-copy">
-          <p class="eyebrow">Title Company · Slidell, LA</p>
-          <h1>Real estate closings, handled with care in <em>Slidell</em> &amp; beyond</h1>
-          <p class="hero-lead">Patriot Title is a modern real estate service provider specifically geared to handling all the complex details of settling and closing real estate purchases, sales or refinances. All of our services are the result of years of specialization in the real estate industry and are fully insured.</p>
-          <div class="hero-actions">
+          <p class="eyebrow hero-line">Title Company · Slidell, LA</p>
+          <h1 class="hero-line">Real estate closings, handled with care in <em>Slidell</em> &amp; beyond</h1>
+          <p class="hero-lead hero-line">Patriot Title is a modern real estate service provider specifically geared to handling all the complex details of settling and closing real estate purchases, sales or refinances. All of our services are the result of years of specialization in the real estate industry and are fully insured.</p>
+          <div class="hero-actions hero-line">
             <a href="tel:985-649-0433" class="btn btn-accent"><i class="ph ph-phone" aria-hidden="true"></i> Call (985) 649-0433</a>
             <a href="#services" class="btn btn-outline">View Services</a>
           </div>
-          <p class="hero-note">Closing files in all Louisiana parishes &amp; all Mississippi counties</p>
-          <ul class="section-details">
+          <p class="hero-note hero-line">Closing files in all Louisiana parishes &amp; all Mississippi counties</p>
+          <ul class="section-details hero-line">
             <li><i class="ph ph-buildings" aria-hidden="true"></i> Attorney owned &amp; operated</li>
             <li><i class="ph ph-shield-check" aria-hidden="true"></i> Fully insured</li>
             <li><i class="ph ph-map-pin" aria-hidden="true"></i> LA &amp; MS closings</li>
           </ul>
         </div>
-        <figure class="hero-photo">
+        <figure class="hero-photo hero-line hero-line--photo">
           <div class="hero-float">
             <strong>3,000+</strong>
             <span>Closing files by founding partner R.J. Brinson, Esq.</span>
@@ -687,6 +687,19 @@
       var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       var bar = document.getElementById('scroll-progress');
       var sections = document.querySelectorAll('.section-enter');
+      var hero = document.getElementById('home');
+
+      if (hero) {
+        if (reduce) {
+          hero.classList.add('is-ready');
+        } else {
+          requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+              hero.classList.add('is-ready');
+            });
+          });
+        }
+      }
 
       if (bar && !reduce) {
         var onScroll = function () {
