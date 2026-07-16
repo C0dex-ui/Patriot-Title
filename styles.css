@@ -524,15 +524,17 @@ h1, h2, h3, h4 {
 .hero-photo {
   position: relative;
   border-radius: 24px;
-  overflow: hidden;
+  overflow: visible;
   box-shadow: var(--shadow-lg);
-  background: var(--navy-deep);
+  background: transparent;
   aspect-ratio: 5 / 4;
 }
 .hero-photo img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 24px;
+  display: block;
 }
 .hero-photo figcaption {
   position: absolute;
@@ -1418,8 +1420,277 @@ h1, h2, h3, h4 {
   box-shadow: 0 8px 24px rgba(0, 0, 96, 0.28);
 }
 
-.scroll-progress { display: none; }
-.reveal { opacity: 1; transform: none; }
+/* ---- Motion: relevant 3D / closing-file metaphors ---- */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  z-index: 300;
+  background: linear-gradient(90deg, var(--navy) 0%, var(--accent) 100%);
+  transform-origin: left center;
+  pointer-events: none;
+}
+
+/* Perspective scene wrappers */
+.svc-grid,
+.directory-grid,
+.process-steps,
+.offices,
+.facts-inner {
+  perspective: 1200px;
+}
+
+/* Scroll reveal — documents rising onto the table */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px) rotateX(8deg) scale(0.985);
+  transform-origin: center bottom;
+  transition:
+    opacity 0.7s var(--ease),
+    transform 0.75s var(--ease);
+  will-change: opacity, transform;
+}
+.reveal.is-in {
+  opacity: 1;
+  transform: translateY(0) rotateX(0) scale(1);
+}
+.reveal-delay-1 { transition-delay: 0.08s; }
+.reveal-delay-2 { transition-delay: 0.16s; }
+.reveal-delay-3 { transition-delay: 0.24s; }
+.reveal-delay-4 { transition-delay: 0.32s; }
+.reveal-delay-5 { transition-delay: 0.4s; }
+
+/* Hero: slight 3D “folder” angle + floating closing stat */
+.hero-photo {
+  transform: perspective(1100px) rotateY(-5deg) rotateX(2deg);
+  transition: transform 0.6s var(--ease), box-shadow 0.6s var(--ease);
+  transform-style: preserve-3d;
+}
+.hero-photo:hover {
+  transform: perspective(1100px) rotateY(-1deg) rotateX(0) translateY(-4px);
+  box-shadow: var(--shadow-lg), 0 24px 48px rgba(0, 0, 96, 0.12);
+}
+.hero-float {
+  animation: floatBadge 4.5s ease-in-out infinite;
+  transform: translateZ(28px);
+}
+@keyframes floatBadge {
+  0%, 100% { transform: translateZ(28px) translateY(0); }
+  50% { transform: translateZ(28px) translateY(-10px); }
+}
+
+/* Floating key + seal accents (title closing symbols) */
+.hero-orbit {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  overflow: visible;
+}
+.hero-orbit span {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--navy);
+  font-size: 1.25rem;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--line-soft);
+  animation: orbitBob 5s ease-in-out infinite;
+  z-index: 4;
+}
+.hero-orbit .orbit-key {
+  right: -10px;
+  top: 18%;
+  animation-delay: 0s;
+}
+.hero-orbit .orbit-seal {
+  right: 8%;
+  bottom: 22%;
+  color: var(--accent);
+  animation-delay: 1.2s;
+  animation-duration: 5.8s;
+}
+.hero-orbit .orbit-file {
+  left: -8px;
+  bottom: 28%;
+  animation-delay: 0.6s;
+  animation-duration: 4.8s;
+}
+@keyframes orbitBob {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50% { transform: translateY(-12px) rotate(4deg); }
+}
+
+/* Service cards: 3D folder tilt on hover */
+.svc-card {
+  transform-style: preserve-3d;
+  transition:
+    transform 0.4s var(--ease),
+    box-shadow 0.4s var(--ease),
+    border-color 0.2s;
+}
+.svc-card:hover {
+  transform: translateY(-8px) rotateX(5deg) rotateY(-4deg);
+  box-shadow:
+    var(--shadow-md),
+    0 18px 36px rgba(0, 0, 96, 0.1);
+}
+.svc-card-icon {
+  transition: transform 0.4s var(--ease), background 0.2s;
+  transform: translateZ(16px);
+}
+.svc-card:hover .svc-card-icon {
+  transform: translateZ(28px) scale(1.08) rotate(-6deg);
+  background: var(--navy);
+  color: #fff;
+}
+
+/* Process steps: step onto the closing table */
+.process-steps li {
+  transform-style: preserve-3d;
+}
+.process-steps li.is-in,
+.process-steps .reveal.is-in {
+  /* handled by .reveal.is-in */
+}
+.process-steps li:hover {
+  transform: translateY(-5px) rotateX(3deg);
+}
+.process-steps .num {
+  transition: transform 0.35s var(--ease), background 0.2s, border-color 0.2s;
+}
+.process-steps li:hover .num {
+  transform: translateZ(12px) scale(1.06);
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* Team cards: portrait depth */
+.dir-card {
+  transform-style: preserve-3d;
+  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+}
+.dir-card:hover {
+  transform: translateY(-6px) rotateY(3deg);
+  box-shadow: var(--shadow-md);
+}
+.dir-card.is-featured:hover {
+  transform: translateY(-4px) rotateX(1deg);
+}
+.dir-card-media img {
+  transition: transform 0.6s var(--ease);
+}
+.dir-card:hover .dir-card-media img {
+  transform: scale(1.05);
+}
+
+/* Story carousel: page-turn feel */
+.story-track {
+  perspective: 1400px;
+  transform-style: preserve-3d;
+}
+.story-slide.is-active {
+  animation: storyTurn 0.55s var(--ease);
+}
+@keyframes storyTurn {
+  from {
+    opacity: 0.2;
+    transform: rotateY(-12deg) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: rotateY(0) scale(1);
+  }
+}
+.story-slide.is-active .story-photo img {
+  animation: storyPhotoIn 0.7s var(--ease);
+}
+@keyframes storyPhotoIn {
+  from { transform: scale(1.06); opacity: 0.7; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Office cards: map-pin lift */
+.office-card {
+  transform-style: preserve-3d;
+  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
+}
+.office-card:hover {
+  transform: translateY(-6px) rotateX(4deg);
+}
+
+/* Facts bar items */
+.facts-inner div {
+  transition: transform 0.3s var(--ease), background 0.2s;
+}
+.facts-inner div:hover {
+  transform: translateY(-2px);
+}
+
+/* Stamp pulse on trust logos row */
+.trust-logos img {
+  transition: transform 0.35s var(--ease), opacity 0.2s, filter 0.2s;
+}
+.trust-logos img:hover {
+  transform: scale(1.08) translateY(-2px);
+  opacity: 1;
+  filter: grayscale(0);
+}
+
+/* Framed diamond watermark slow drift */
+.framed-mark {
+  animation: markDrift 18s ease-in-out infinite alternate;
+}
+@keyframes markDrift {
+  from { filter: opacity(1); transform: translateY(-50%) rotate(0deg) scale(1); }
+  to { filter: opacity(0.85); transform: translateY(-52%) rotate(6deg) scale(1.04); }
+}
+.framed-mark--top {
+  animation-name: markDriftTop;
+}
+@keyframes markDriftTop {
+  from { transform: rotate(0deg) scale(1); }
+  to { transform: rotate(-5deg) scale(1.05); }
+}
+.framed-mark--left {
+  animation-name: markDriftLeft;
+}
+@keyframes markDriftLeft {
+  from { transform: translateY(-50%) rotate(0deg); }
+  to { transform: translateY(-48%) rotate(-4deg); }
+}
+
+/* Reduced motion: calm static site */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .hero-float,
+  .hero-orbit span,
+  .framed-mark,
+  .framed-mark--top,
+  .framed-mark--left,
+  .story-slide.is-active,
+  .story-slide.is-active .story-photo img {
+    animation: none !important;
+  }
+  .hero-photo,
+  .svc-card,
+  .dir-card,
+  .office-card {
+    transform: none !important;
+    transition: box-shadow 0.2s, border-color 0.2s !important;
+  }
+  .scroll-progress { display: none; }
+}
 
 /* Responsive */
 @media (max-width: 960px) {
