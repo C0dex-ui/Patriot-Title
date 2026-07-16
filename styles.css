@@ -1534,10 +1534,20 @@ h1, h2, h3, h4 {
     transform: translateY(0) scale(1);
   }
 }
+.hero-animate .hero-float {
+  opacity: 0;
+}
 .hero-animate.is-ready .hero-float {
   animation:
     heroFloatIn 0.7s var(--ease) 0.75s both,
     heroFloatBob 4.2s ease-in-out 1.5s infinite;
+}
+.hero-animate .hero-photo figcaption {
+  opacity: 0;
+}
+.hero-animate .hero-photo img {
+  opacity: 0.35;
+  transform: scale(1.04);
 }
 @keyframes heroFloatIn {
   from {
