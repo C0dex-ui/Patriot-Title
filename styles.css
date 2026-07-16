@@ -692,12 +692,11 @@ h1, h2, h3, h4 {
   display: flex;
   flex-direction: column;
   height: 100%;
-  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease), border-color 0.2s;
+  transition: box-shadow 0.25s var(--ease), border-color 0.2s;
   backdrop-filter: blur(4px);
   padding: 22px 20px 22px;
 }
 .svc-card:hover {
-  transform: translateY(-6px);
   box-shadow: var(--shadow-md);
   border-color: transparent;
 }
@@ -784,14 +783,13 @@ h1, h2, h3, h4 {
   border-radius: var(--radius);
   padding: 24px 20px;
   height: 100%;
-  transition: background 0.25s, border-color 0.25s, transform 0.25s var(--ease);
+  transition: background 0.25s, border-color 0.25s;
   position: relative;
   backdrop-filter: blur(10px);
 }
 .process-steps li:hover {
   background: rgba(255,255,255,0.09);
   border-color: rgba(255, 255, 255, 0.22);
-  transform: translateY(-3px);
 }
 .process-steps .num {
   display: inline-flex;
@@ -888,11 +886,10 @@ h1, h2, h3, h4 {
   display: flex;
   flex-direction: column;
   height: 100%;
-  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
+  transition: box-shadow 0.25s var(--ease);
   backdrop-filter: blur(4px);
 }
 .dir-card:hover {
-  transform: translateY(-4px);
   box-shadow: var(--shadow-md);
 }
 .dir-card.is-hidden { display: none; }
@@ -913,9 +910,7 @@ h1, h2, h3, h4 {
   height: 260px;
   object-fit: cover;
   object-position: top center;
-  transition: transform 0.55s var(--ease);
 }
-.dir-card:hover .dir-card-media img { transform: scale(1.04); }
 .dir-card.is-featured .dir-card-media img {
   height: 100%;
   min-height: 320px;
@@ -1011,10 +1006,7 @@ h1, h2, h3, h4 {
   box-shadow: var(--shadow-lg);
   min-height: 360px;
   background: var(--navy-deep);
-  perspective: 1600px;
-  transform-style: preserve-3d;
 }
-/* 3D page-turn slides (closing-file flip) */
 .story-slide {
   display: grid;
   grid-template-columns: 1.35fr 0.9fr;
@@ -1025,49 +1017,26 @@ h1, h2, h3, h4 {
   width: 100%;
   opacity: 0;
   pointer-events: none;
-  transform: rotateY(82deg) translateZ(-40px) scale(0.94);
-  transform-origin: center center;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-  transition:
-    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.55s ease;
+  transition: opacity 0.45s ease;
   z-index: 1;
 }
 .story-slide.is-active {
   position: relative;
   opacity: 1;
   pointer-events: auto;
-  transform: rotateY(0deg) translateZ(0) scale(1);
   z-index: 3;
 }
-.story-slide.is-leave-next {
-  opacity: 0;
-  transform: rotateY(-82deg) translateZ(-40px) scale(0.94);
-  z-index: 2;
-  pointer-events: none;
-}
-.story-slide.is-leave-prev {
-  opacity: 0;
-  transform: rotateY(82deg) translateZ(-40px) scale(0.94);
-  z-index: 2;
-  pointer-events: none;
-}
-.story-slide.is-prep-next {
-  transform: rotateY(82deg) translateZ(-40px) scale(0.94);
-  opacity: 0;
-  transition: none;
-}
+.story-slide.is-leave-next,
+.story-slide.is-leave-prev,
+.story-slide.is-prep-next,
 .story-slide.is-prep-prev {
-  transform: rotateY(-82deg) translateZ(-40px) scale(0.94);
   opacity: 0;
-  transition: none;
+  pointer-events: none;
 }
 .story-photo {
   margin: 0;
   min-height: 360px;
   background: #1a1a2e;
-  transition: transform 0.55s var(--ease);
 }
 .story-photo img {
   width: 100%;
@@ -1083,7 +1052,6 @@ h1, h2, h3, h4 {
   justify-content: center;
   background: linear-gradient(160deg, rgba(0, 0, 48, 0.98) 0%, rgba(0, 0, 96, 0.95) 100%);
   color: #fff;
-  transition: transform 0.55s var(--ease);
 }
 .story-panel h3 {
   color: #fff;
@@ -1378,10 +1346,9 @@ h1, h2, h3, h4 {
   border-radius: var(--radius);
   padding: 20px;
   box-shadow: var(--shadow-md);
-  transition: transform 0.25s var(--ease), box-shadow 0.25s;
+  transition: box-shadow 0.25s;
 }
 .office-card:hover {
-  transform: translateY(-3px);
   box-shadow: var(--shadow-lg);
 }
 .office-card strong {
@@ -1459,7 +1426,7 @@ h1, h2, h3, h4 {
   box-shadow: 0 8px 24px rgba(0, 0, 96, 0.28);
 }
 
-/* ---- Motion: relevant 3D / closing-file metaphors ---- */
+/* ---- Scroll section transitions only (no card 3D hover) ---- */
 .scroll-progress {
   position: fixed;
   top: 0;
@@ -1472,324 +1439,139 @@ h1, h2, h3, h4 {
   pointer-events: none;
 }
 
-/* Perspective scene wrappers */
-.svc-grid,
-.directory-grid,
-.process-steps,
-.offices,
-.facts-inner {
-  perspective: 1200px;
-}
-
-/* Scroll reveal — documents rising onto the table */
-.reveal {
+/* Whole section fades/slides in when scrolled into view */
+.section-enter {
   opacity: 0;
-  transform: translateY(28px) rotateX(8deg) scale(0.985);
-  transform-origin: center bottom;
+  transform: translateY(48px);
   transition:
-    opacity 0.7s var(--ease),
-    transform 0.75s var(--ease);
+    opacity 0.8s var(--ease),
+    transform 0.85s var(--ease);
   will-change: opacity, transform;
 }
-.reveal.is-in {
+.section-enter.is-in {
   opacity: 1;
-  transform: translateY(0) rotateX(0) scale(1);
-}
-.reveal-delay-1 { transition-delay: 0.08s; }
-.reveal-delay-2 { transition-delay: 0.16s; }
-.reveal-delay-3 { transition-delay: 0.24s; }
-.reveal-delay-4 { transition-delay: 0.32s; }
-.reveal-delay-5 { transition-delay: 0.4s; }
-
-/* Hero: slight 3D “folder” angle + floating closing stat */
-.hero-photo {
-  transform: perspective(1100px) rotateY(-5deg) rotateX(2deg);
-  transition: transform 0.6s var(--ease), box-shadow 0.6s var(--ease);
-  transform-style: preserve-3d;
-}
-.hero-photo:hover {
-  transform: perspective(1100px) rotateY(-1deg) rotateX(0) translateY(-4px);
-  box-shadow: var(--shadow-lg), 0 24px 48px rgba(0, 0, 96, 0.12);
-}
-.hero-float {
-  animation: floatBadge 4.5s ease-in-out infinite;
-  transform: translateZ(28px);
-}
-@keyframes floatBadge {
-  0%, 100% { transform: translateZ(28px) translateY(0); }
-  50% { transform: translateZ(28px) translateY(-10px); }
+  transform: translateY(0);
 }
 
-/* Floating key + seal accents (title closing symbols) */
-.hero-orbit {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 2;
-  overflow: visible;
+/* Soft card hover — lift only, no 3D */
+.svc-card,
+.dir-card,
+.office-card {
+  transition: box-shadow 0.25s var(--ease), border-color 0.2s;
 }
-.hero-orbit span {
-  position: absolute;
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.96);
-  color: var(--navy);
-  font-size: 1.25rem;
+.svc-card:hover,
+.dir-card:hover,
+.office-card:hover {
   box-shadow: var(--shadow-md);
-  border: 1px solid var(--line-soft);
-  animation: orbitBob 5s ease-in-out infinite;
-  z-index: 4;
-}
-.hero-orbit .orbit-key {
-  right: -10px;
-  top: 18%;
-  animation-delay: 0s;
-}
-.hero-orbit .orbit-seal {
-  right: 8%;
-  bottom: 22%;
-  color: var(--accent);
-  animation-delay: 1.2s;
-  animation-duration: 5.8s;
-}
-.hero-orbit .orbit-file {
-  left: -8px;
-  bottom: 28%;
-  animation-delay: 0.6s;
-  animation-duration: 4.8s;
-}
-@keyframes orbitBob {
-  0%, 100% { transform: translateY(0) rotate(-4deg); }
-  50% { transform: translateY(-12px) rotate(4deg); }
-}
-
-/* Service cards: 3D folder tilt on hover */
-.svc-card {
-  transform-style: preserve-3d;
-  transition:
-    transform 0.4s var(--ease),
-    box-shadow 0.4s var(--ease),
-    border-color 0.2s;
-}
-.svc-card:hover {
-  transform: translateY(-8px) rotateX(5deg) rotateY(-4deg);
-  box-shadow:
-    var(--shadow-md),
-    0 18px 36px rgba(0, 0, 96, 0.1);
 }
 .svc-card-icon {
-  transition: transform 0.4s var(--ease), background 0.2s;
-  transform: translateZ(16px);
+  transition: background 0.2s, color 0.2s;
 }
 .svc-card:hover .svc-card-icon {
-  transform: translateZ(28px) scale(1.08) rotate(-6deg);
   background: var(--navy);
   color: #fff;
 }
-
-/* Process steps: step onto the closing table */
-.process-steps li {
-  transform-style: preserve-3d;
-}
-.process-steps li.is-in,
-.process-steps .reveal.is-in {
-  /* handled by .reveal.is-in */
-}
-.process-steps li:hover {
-  transform: translateY(-5px) rotateX(3deg);
-}
-.process-steps .num {
-  transition: transform 0.35s var(--ease), background 0.2s, border-color 0.2s;
-}
-.process-steps li:hover .num {
-  transform: translateZ(12px) scale(1.06);
-  background: rgba(255, 255, 255, 0.14);
-}
-
-/* Team cards: portrait depth */
-.dir-card {
-  transform-style: preserve-3d;
-  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
-}
-.dir-card:hover {
-  transform: translateY(-6px) rotateY(3deg);
-  box-shadow: var(--shadow-md);
-}
-.dir-card.is-featured:hover {
-  transform: translateY(-4px) rotateX(1deg);
-}
 .dir-card-media img {
-  transition: transform 0.6s var(--ease);
+  transition: none;
 }
 .dir-card:hover .dir-card-media img {
-  transform: scale(1.05);
-}
-
-/* Story carousel photo depth during 3D flip */
-.story-slide.is-active .story-photo {
-  transform: translateZ(18px);
-}
-.story-slide.is-active .story-panel {
-  transform: translateZ(28px);
-}
-.story-slide.is-active .story-photo img {
-  animation: storyPhotoIn 0.85s var(--ease);
-}
-@keyframes storyPhotoIn {
-  from { transform: scale(1.08) translateX(12px); opacity: 0.55; }
-  to { transform: scale(1) translateX(0); opacity: 1; }
-}
-
-/* Page-load 3D folder open transition */
-.page-enter {
-  position: fixed;
-  inset: 0;
-  z-index: 9998;
-  pointer-events: none;
-  perspective: 1400px;
-}
-.page-enter__panel {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(145deg, var(--navy-deep) 0%, var(--navy) 55%, #1a0a12 100%);
-  transform-origin: left center;
-  transform: rotateY(0deg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 12px 0 40px rgba(0, 0, 0, 0.35);
-}
-.page-enter__panel::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: url("./assets/mark-diamond-dark.png") center / min(220px, 40vw) no-repeat;
-  opacity: 0.35;
-}
-.page-enter__mark {
-  position: relative;
-  z-index: 1;
-  width: 72px;
-  height: 72px;
-  object-fit: contain;
-  filter: brightness(1.1);
-  animation: enterLogoPulse 0.9s ease;
-}
-@keyframes enterLogoPulse {
-  from { transform: scale(0.85); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-.page-enter.is-done .page-enter__panel {
-  animation: folderOpen 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-@keyframes folderOpen {
-  0% {
-    transform: rotateY(0deg);
-    opacity: 1;
-  }
-  70% {
-    opacity: 1;
-  }
-  100% {
-    transform: rotateY(-95deg);
-    opacity: 0;
-  }
-}
-.page-enter.is-gone {
-  display: none;
-}
-
-/* Section 3D band transition */
-.section-3d {
-  transform-style: preserve-3d;
-}
-.section-3d.reveal:not(.is-in) {
-  transform: translateY(40px) rotateX(10deg) scale(0.98);
-  opacity: 0;
-}
-.section-3d.reveal.is-in {
   transform: none;
-  opacity: 1;
 }
-
-/* Office cards: map-pin lift */
-.office-card {
-  transform-style: preserve-3d;
-  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
+.process-steps li:hover {
+  transform: none;
 }
-.office-card:hover {
-  transform: translateY(-6px) rotateX(4deg);
-}
-
-/* Facts bar items */
-.facts-inner div {
-  transition: transform 0.3s var(--ease), background 0.2s;
+.process-steps li:hover .num {
+  transform: none;
 }
 .facts-inner div:hover {
-  transform: translateY(-2px);
+  transform: none;
 }
-
-/* Stamp pulse on trust logos row */
 .trust-logos img {
-  transition: transform 0.35s var(--ease), opacity 0.2s, filter 0.2s;
+  transition: opacity 0.2s, filter 0.2s;
 }
 .trust-logos img:hover {
-  transform: scale(1.08) translateY(-2px);
+  transform: none;
   opacity: 1;
   filter: grayscale(0);
 }
 
-/* Framed diamond watermark slow drift */
-.framed-mark {
-  animation: markDrift 18s ease-in-out infinite alternate;
+/* Hero photo — static, no 3D */
+.hero-photo {
+  transform: none;
 }
-@keyframes markDrift {
-  from { filter: opacity(1); transform: translateY(-50%) rotate(0deg) scale(1); }
-  to { filter: opacity(0.85); transform: translateY(-52%) rotate(6deg) scale(1.04); }
+.hero-photo:hover {
+  transform: none;
 }
-.framed-mark--top {
-  animation-name: markDriftTop;
+.hero-float {
+  animation: none;
+  transform: none;
 }
-@keyframes markDriftTop {
-  from { transform: rotate(0deg) scale(1); }
-  to { transform: rotate(-5deg) scale(1.05); }
-}
-.framed-mark--left {
-  animation-name: markDriftLeft;
-}
-@keyframes markDriftLeft {
-  from { transform: translateY(-50%) rotate(0deg); }
-  to { transform: translateY(-48%) rotate(-4deg); }
+.hero-orbit {
+  display: none;
 }
 
-/* Reduced motion: calm static site */
+/* Framed marks — static */
+.framed-mark,
+.framed-mark--top,
+.framed-mark--left {
+  animation: none;
+}
+
+/* Page-load overlay removed */
+.page-enter {
+  display: none !important;
+}
+
+/* Carousel: simple fade (not 3D flip) */
+.story-track {
+  perspective: none;
+  transform-style: flat;
+}
+.story-slide {
+  display: grid;
+  grid-template-columns: 1.35fr 0.9fr;
+  min-height: 360px;
+  background: var(--navy-deep);
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transform: none;
+  transition: opacity 0.45s ease;
+  z-index: 1;
+}
+.story-slide.is-active {
+  position: relative;
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+  z-index: 3;
+}
+.story-slide.is-leave-next,
+.story-slide.is-leave-prev,
+.story-slide.is-prep-next,
+.story-slide.is-prep-prev {
+  transform: none;
+  opacity: 0;
+}
+.story-slide.is-active .story-photo,
+.story-slide.is-active .story-panel {
+  transform: none;
+}
+.story-slide.is-active .story-photo img {
+  animation: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .reveal {
+  .section-enter {
     opacity: 1;
     transform: none;
     transition: none;
   }
-  .hero-float,
-  .hero-orbit span,
-  .framed-mark,
-  .framed-mark--top,
-  .framed-mark--left,
-  .story-slide.is-active .story-photo img,
-  .page-enter__mark {
-    animation: none !important;
-  }
-  .hero-photo,
-  .svc-card,
-  .dir-card,
-  .office-card,
   .story-slide {
-    transform: none !important;
-    transition: box-shadow 0.2s, border-color 0.2s, opacity 0.2s !important;
+    transition: none;
   }
   .story-slide:not(.is-active) {
     display: none !important;
@@ -1797,29 +1579,12 @@ h1, h2, h3, h4 {
   .story-slide.is-active {
     position: relative !important;
     opacity: 1 !important;
-    pointer-events: auto !important;
   }
-  .page-enter { display: none !important; }
   .scroll-progress { display: none; }
 }
 
 /* Responsive */
 @media (max-width: 960px) {
-  .story-slide:not(.is-active) {
-    transform: translateX(40px) rotateY(28deg) scale(0.96);
-  }
-  .story-slide.is-leave-next {
-    transform: translateX(-40px) rotateY(-28deg) scale(0.96);
-  }
-  .story-slide.is-leave-prev {
-    transform: translateX(40px) rotateY(28deg) scale(0.96);
-  }
-  .story-slide.is-prep-next {
-    transform: translateX(48px) rotateY(32deg) scale(0.96);
-  }
-  .story-slide.is-prep-prev {
-    transform: translateX(-48px) rotateY(-32deg) scale(0.96);
-  }
   .hero-inner,
   .svc-grid,
   .process-steps,
