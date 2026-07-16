@@ -12,7 +12,7 @@
   <meta property="og:description" content="Attorney-owned title company for purchases, sales, refinances, and title insurance. Fully insured. Call (985) 649-0433.">
   <meta property="og:url" content="https://patriottitlela.com/">
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  <link rel="stylesheet" href="styles.css?v=25">
+  <link rel="stylesheet" href="styles.css?v=26">
   <link rel="icon" type="image/png" href="./logo.png">
   <script type="application/ld+json">
   {
@@ -79,6 +79,11 @@
 </head>
 <body>
   <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+  <div class="page-enter" id="page-enter" aria-hidden="true">
+    <div class="page-enter__panel">
+      <img class="page-enter__mark" src="./logo.png" alt="" width="72" height="72">
+    </div>
+  </div>
   <a class="skip-link" href="#main">Skip to content</a>
 
   <div class="utility">
@@ -642,36 +647,90 @@
     (function () {
       var root = document.getElementById('story-carousel');
       if (!root) return;
-      var slides = root.querySelectorAll('.story-slide');
+      var slides = Array.prototype.slice.call(root.querySelectorAll('.story-slide'));
       var dots = root.querySelectorAll('.story-dot');
       var prev = root.querySelector('.story-prev');
       var next = root.querySelector('.story-next');
       var i = 0;
       var timer;
-      function go(n) {
-        i = (n + slides.length) % slides.length;
-        slides.forEach(function (s, idx) {
-          var on = idx === i;
-          s.classList.toggle('is-active', on);
-          s.setAttribute('aria-hidden', on ? 'false' : 'true');
-        });
+      var busy = false;
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function syncDots() {
         dots.forEach(function (d, idx) {
           d.classList.toggle('is-active', idx === i);
           d.setAttribute('aria-selected', idx === i ? 'true' : 'false');
         });
       }
+
+      function go(n, dir) {
+        var target = (n + slides.length) % slides.length;
+        if (target === i || busy) return;
+
+        if (reduce) {
+          slides[i].classList.remove('is-active');
+          slides[i].setAttribute('aria-hidden', 'true');
+          i = target;
+          slides[i].classList.add('is-active');
+          slides[i].setAttribute('aria-hidden', 'false');
+          syncDots();
+          return;
+        }
+
+        busy = true;
+        var from = slides[i];
+        var to = slides[target];
+        var direction = dir;
+        if (!direction) {
+          if (target === 0 && i === slides.length - 1) direction = 1;
+          else if (target === slides.length - 1 && i === 0) direction = -1;
+          else direction = target > i ? 1 : -1;
+        }
+
+        var leave = direction > 0 ? 'is-leave-next' : 'is-leave-prev';
+        var prep = direction > 0 ? 'is-prep-next' : 'is-prep-prev';
+
+        to.classList.remove('is-leave-next', 'is-leave-prev', 'is-active');
+        to.classList.add(prep);
+        void to.offsetWidth;
+
+        from.classList.remove('is-active');
+        from.classList.add(leave);
+        from.setAttribute('aria-hidden', 'true');
+
+        to.classList.remove(prep);
+        to.classList.add('is-active');
+        to.setAttribute('aria-hidden', 'false');
+
+        i = target;
+        syncDots();
+
+        window.setTimeout(function () {
+          slides.forEach(function (s, idx) {
+            if (idx !== i) {
+              s.classList.remove('is-leave-next', 'is-leave-prev', 'is-prep-next', 'is-prep-prev', 'is-active');
+            }
+          });
+          busy = false;
+        }, 780);
+      }
+
       function start() {
         stop();
-        timer = setInterval(function () { go(i + 1); }, 6000);
+        timer = setInterval(function () { go(i + 1, 1); }, 6500);
       }
       function stop() {
         if (timer) clearInterval(timer);
       }
-      if (prev) prev.addEventListener('click', function () { go(i - 1); start(); });
-      if (next) next.addEventListener('click', function () { go(i + 1); start(); });
+      if (prev) prev.addEventListener('click', function () { go(i - 1, -1); start(); });
+      if (next) next.addEventListener('click', function () { go(i + 1, 1); start(); });
       dots.forEach(function (d) {
         d.addEventListener('click', function () {
-          go(parseInt(d.getAttribute('data-goto'), 10));
+          var t = parseInt(d.getAttribute('data-goto'), 10);
+          var dir = t > i ? 1 : -1;
+          if (t === 0 && i === slides.length - 1) dir = 1;
+          if (t === slides.length - 1 && i === 0) dir = -1;
+          go(t, dir);
           start();
         });
       });
@@ -684,6 +743,21 @@
     (function () {
       var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       var bar = document.getElementById('scroll-progress');
+      var enter = document.getElementById('page-enter');
+
+      if (enter) {
+        if (reduce) {
+          enter.classList.add('is-gone');
+        } else {
+          requestAnimationFrame(function () {
+            enter.classList.add('is-done');
+          });
+          window.setTimeout(function () {
+            enter.classList.add('is-gone');
+          }, 1100);
+        }
+      }
+
       if (bar && !reduce) {
         var onScroll = function () {
           var doc = document.documentElement;
